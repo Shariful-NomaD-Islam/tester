@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.1.127:5432/db1
+    username: tulip
+    password: tulip
+    concurrency: 4
+    fetchSize: 4
+    hikari:
+      maximum-pool-size: 10
+
+server:
+  port: 9999
+
+app:
+  json-compare: true

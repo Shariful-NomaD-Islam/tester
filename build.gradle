@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.nomad.tester'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.postgresql:postgresql'
+
+    implementation(fileTree('lib'))
+}
+
+tasks {
+    application.mainClass.set('com.nomad.tester.TesterApplication')
+    run {
+        classpath += files("conf")
+    }
+    startScripts {
+        classpath += files('src/dist/conf')
+        doLast {
+            unixScript.text = unixScript.text
+                    .replaceAll('APP_HOME=', 'export APP_HOME=')
+                    .replaceAll('\\$APP_HOME/lib/conf', '\\$APP_HOME/conf')
+            windowsScript.text = windowsScript.text
+                    .replaceAll('%APP_HOME%\\\\lib\\\\conf', '%APP_HOME%\\\\conf')
+        }
+    }
+}
